@@ -1,125 +1,157 @@
-package com.accounts.service;
+package com.userstock.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Date;
+import java.util.HashMap; 
+import java.util.List; 
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
- 
-import com.accounts.model.UserAccount;
+
+import com.userstock.model.Stock;
+import com.userstock.model.User;
+import com.userstock.model.UserStock;
+import com.userstock.model.UserStocksOrders; 
 
 /**
- * UserAccount Service Implementation class
+ * UserStocks Inventory Service Implementation class
  * @author jnavamshan
  *
  */
-@Service("userService")
+@Service("userStocksInventoryService")
 @Transactional
-public class UserAccountServiceImpl implements UserAccountsService{
+public class UserStocksInventoryServiceImpl implements UserStocksInventoryService{
 	
-	private static final AtomicLong counter = new AtomicLong();
-	
-	private static List<UserAccount> accounts;
+	private static HashMap<Integer,User> usersMap = new HashMap<Integer,User>();
+	private static HashMap<Integer,Stock> stocksMap = new HashMap<Integer,Stock>();
+	private static HashMap<Integer,UserStock> userStocks = new HashMap<Integer,UserStock>();
 	
 	static{
-		accounts = populateDummyUserAccounts();
+		populateDummyUserStocks();
 	}
-	
-	/**
-	 * pre-load the user account
-	 * @return list of dummy user accounts
-	 */
-	private static List<UserAccount> populateDummyUserAccounts(){
-		List<UserAccount> accounts = new ArrayList<UserAccount>(); 		
-		accounts.add(new UserAccount(counter.incrementAndGet(), "JackSmith", "Massachusetts", "Jack", "Smith", "Ques1", "Ans1", true));
-		accounts.add(new UserAccount(counter.incrementAndGet(), "AdamJohnson", "New York", "Adam", "Johnson",  "Ques2", "Ans2"));
-		accounts.add(new UserAccount(counter.incrementAndGet(), "KatherinCarter", "Washington DC", "Katherin", "Carter",  "Ques3", "Ans3"));
-		accounts.add(new UserAccount(counter.incrementAndGet(), "JackLondon", "Nevada", "Jack", "London",  "Ques4", "Ans4"));
-		accounts.add(new UserAccount(counter.incrementAndGet(), "JasonBourne", "California","Jason" , "Bourne",   "Ques5", "Ans5")); 
-		return accounts;
-	}
-	
+	 
+	private static void populateDummyUserStocks(){ 	
+		User user = new User(1,"Jasmin", "Kevin", "Phone1" ,"Address1");
+		usersMap.put(user.getUserId(), user);
+		user = new User(2,"John", "Peter", "Phone2" ,"Address2");
+		usersMap.put(user.getUserId(), user);
+		user = new User(3,"Rose", "Mary", "Phone3" ,"Address3"); 
+		usersMap.put(user.getUserId(), user);
+		
+		Stock stock = new Stock(1, "CDX", new BigDecimal(10), new Date(), new BigDecimal(11));
+		stocksMap.put(stock.getStockId(), stock);
+		stock = new Stock(2, "MEL", new BigDecimal(15), new Date(), new BigDecimal(16));
+		stocksMap.put(stock.getStockId(), stock);
+		stock = new Stock(3, "USQ", new BigDecimal(12), new Date(), new BigDecimal(11));
+		stocksMap.put(stock.getStockId(), stock);
+	} 
 
-	/**
-	 * return all the exiting user accounts
-	 * @return all the exiting user accounts
-	 */
-	public List<UserAccount> findAllUserAccounts() {
-		return accounts;
+
+	@Override
+	public void createNewUser(User user) {
+		user.setUserId(usersMap.values().size()+1);
+		usersMap.put(user.getUserId(), user);		
 	}
-	
-	/**
-	 * return the User Account which has the passed in account id
-	 * @return null if it is not found
-	 */
-	public UserAccount findByAccountId(long accountId) {
-		for(UserAccount account : accounts){
-			if(account.getAccountId() == accountId){
-				return account;
+
+	@Override
+	public void updateUser(User user) {
+		if(user.getUserId() > 0){
+			usersMap.put(user.getUserId(), user);	
+		}		
+	}
+
+	@Override
+	public void deleteUser(User user) {
+		usersMap.remove(user.getUserId());			
+	} 
+
+	@Override
+	public User findUser(int userId) {
+		return usersMap.get(userId);
+	}
+
+	@Override
+	public void createStock(Stock stock) {
+		stock.setStockId(stocksMap.values().size()+1);
+		stocksMap.put(stock.getStockId(), stock);		
+	}
+
+	@Override
+	public void updateStock(Stock stock) {
+		if(stock.getStockId() > 0){
+			stocksMap.put(stock.getStockId(), stock);	
+		}		
+	}  
+
+	@Override
+	public Stock findStock(int id) { 
+		return stocksMap.get(id);
+	}
+
+	@Override
+	public void placeOrder(User user, UserStocksOrders order) {
+		if(userStocks.get(user.getUserId())== null || userStocks.get(user.getUserId()).getStockOrders().get(order.getStock().getStockId()) == null){
+			UserStock userStock = findUserStock(user);
+			if(userStock == null){
+				userStock = new UserStock();
+				userStock.setUser(user);
 			}
+			List<UserStocksOrders> userStocksOrdersList = new ArrayList<UserStocksOrders>();
+			userStocksOrdersList.add(order);
+			userStock.getStockOrders().put(order.getStock().getStockId(),userStocksOrdersList);
+			userStocks.put(user.getUserId(),userStock);
+		}else{
+			userStocks.get(user.getUserId()).getStockOrders().get(order.getStock().getStockId()).add(order);	
 		}
-		return null;
-	}
+	} 
 	
-	/**
-	 * return the User Account which has the passed in account  name
-	 * @return null if it is not found
-	 */
-	public UserAccount findByUsername(String username) {
-		for(UserAccount account : accounts){
-			if(account.getUsername().equalsIgnoreCase(username)){
-				return account;
+	@Override
+	public List<UserStocksOrders> findTransaction(Date startDate, Date endDate) {
+		List<UserStocksOrders> orders = new ArrayList<>();
+		for (UserStock userStock : userStocks.values()) {
+			for(int key: userStock.getStockOrders().keySet()){
+				orders.addAll(userStock.getStockOrders().get(key).stream().filter(
+						order -> (order.getOrderedDate().before(endDate) && order.getOrderedDate().after(startDate)))
+						.collect(Collectors.toList()));
 			}
+			
 		}
-		return null;
-	}
-	
-	/**
-	 * save the passed in user account
-	 * @param account is the User Account to be saved
-	 */
-	public void saveUserAccount(UserAccount account) {
-		account.setAccountId(counter.incrementAndGet());
-		accounts.add(account);
+		return orders;
 	}
 
-	/**
-	 * update the passed User account
-	 * @param account is the User account to be updated
-	 */
-	public void updateUserAccount(UserAccount account) {
-		int index = accounts.indexOf(account);
-		accounts.set(index, account);
-	}
 
-	/**
-	 *delete the account which has the passed in account Id
-	 *@param accountId is the accountId of the account to be deleted
-	 */
-	public void deleteUserAccountById(long accountId) {		
-		for (Iterator<UserAccount> iterator = accounts.iterator(); iterator.hasNext(); ) {
-		    UserAccount account = iterator.next();
-		    if (account.getAccountId() == accountId) {
-		        iterator.remove();
-		    }
+	@Override
+	public List<UserStocksOrders> findTransaction(User user) { 
+		List<UserStocksOrders> orders = new ArrayList<>();
+		UserStock userStock = findUserStock(user);
+		for(int key: userStock.getStockOrders().keySet()){
+			orders.addAll(userStock.getStockOrders().get(key));
 		}
+		return orders;
 	}
 
-	/**
-	 * return true if the  passed in account is exits, false otherwise
-	 * @return true if the  passed in account is exits, false otherwise
-	 */
-	public boolean isUserAccountExist(UserAccount account) {
-		return findByUsername(account.getUsername())!=null || findByAccountId(account.getAccountId())!=null;
+
+	@Override
+	public UserStock findUserStock(User user) { 
+		return userStocks.get(user.getUserId());
 	}
-	
-	/**
-	 * delete all the existing user account
-	 */
-	public void deleteAllUserAccounts(){
-		accounts.clear();
+
+
+	@Override
+	public List<User> findAllUser() {
+		List<User> users = new ArrayList<>();
+		usersMap.values().forEach(value -> users.add(value));;
+		return users;
+	}
+
+
+	@Override
+	public List<Stock> findAllStock() {
+		List<Stock> stocks = new ArrayList<>();
+		stocksMap.values().forEach(value -> stocks.add(value));;
+		return stocks; 
 	}
 
 

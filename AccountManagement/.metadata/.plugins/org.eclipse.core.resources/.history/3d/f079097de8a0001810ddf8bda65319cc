@@ -1,0 +1,44 @@
+package com.UserStock.model;
+ 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class UserStock {	
+	
+	private User user;  
+	private HashMap<Integer,List<UserStocksOrders>> STockOrders = new HashMap<Integer,List<UserStocksOrders>> ();	
+	
+	
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}  
+	/**
+	 * @return the orders
+	 */
+	public List<UserStocksOrders> getOrders() {
+		if(orders == null){
+			orders = new ArrayList<>();
+		}
+		return orders;
+	}
+	/**
+	 * @param orders the orders to set
+	 */
+	public void setOrders(List<UserStocksOrders> orders) {
+		this.orders = orders;
+	}
+	
+	
+	
+
+}

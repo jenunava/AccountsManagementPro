@@ -1,0 +1,30 @@
+package com.UserStock.service;
+
+import java.util.List;
+ 
+
+/**
+ * UserStocks Inventory Service interface
+ * @author jnavamshan
+ *
+ */
+public interface UserStocksInventoryService {
+	
+	
+	UserStock findByStockId(long id);
+	
+	UserStock findByUsername(String name);
+	
+	void createNewUser(UserStock account);
+	
+	void updateUserStock(UserStock account);
+	
+	void deleteUserStockById(long id);
+
+	List<UserStock> findAllUserStocks(); 
+	
+	void deleteAllUserStocks();
+	
+	public boolean isUserStockExist(UserStock account);
+	
+}

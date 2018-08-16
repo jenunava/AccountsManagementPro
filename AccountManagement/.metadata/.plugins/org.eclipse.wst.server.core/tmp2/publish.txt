@@ -1,0 +1,4 @@
+#Tomcat publish data
+#Wed Aug 15 22:24:11 PDT 2018
+org.eclipse.jst.jee.server\:AccountsManagementProject=C\:\\Apache\\apache-tomcat-8.0.24\\webapps\\AccountsManagementProject
+org.eclipse.jst.jee.server\:StockBrokerProject=C\:\\Apache\\apache-tomcat-8.0.24\\webapps\\StockBrokerProject

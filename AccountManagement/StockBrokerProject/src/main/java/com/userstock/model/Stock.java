@@ -1,0 +1,93 @@
+package com.UserStock.model;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+public class Stock {
+	
+	private int stockId;
+	private String symbol;
+	private BigDecimal openPrice;
+	private Date currentTime;
+	private BigDecimal currentPrice;
+	
+	
+	public Stock(int stockId, String symbol, BigDecimal openPrice, Date currentTime, BigDecimal currentPrice) {
+		super();
+		this.stockId = stockId;
+		this.symbol = symbol;
+		this.openPrice = openPrice;
+		this.currentTime = currentTime;
+		this.currentPrice = currentPrice;
+	}
+	
+	/**
+	 * @return the stockId
+	 */
+	public int getStockId() {
+		return stockId;
+	}
+	/**
+	 * @param stockId the stockId to set
+	 */
+	public void setStockId(int stockId) {
+		this.stockId = stockId;
+	}
+	/**
+	 * @return the symbol
+	 */
+	public String getSymbol() {
+		return symbol;
+	}
+	/**
+	 * @param symbol the symbol to set
+	 */
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
+	/**
+	 * @return the openPrice
+	 */
+	public BigDecimal getOpenPrice() {
+		return openPrice;
+	}
+	/**
+	 * @param openPrice the openPrice to set
+	 */
+	public void setOpenPrice(BigDecimal openPrice) {
+		this.openPrice = openPrice;
+	}
+	/**
+	 * @return the currentTime
+	 */
+	public Date getCurrentTime() {
+		return currentTime;
+	}
+	/**
+	 * @param currentTime the currentTime to set
+	 */
+	public void setCurrentTime(Date currentTime) {
+		this.currentTime = currentTime;
+	}
+	/**
+	 * @return the currentPrice
+	 */
+	public BigDecimal getCurrentPrice() {
+		return currentPrice;
+	}
+	/**
+	 * @param currentPrice the currentPrice to set
+	 */
+	public void setCurrentPrice(BigDecimal currentPrice) {
+		this.currentPrice = currentPrice;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Stock [stockId=" + stockId + ", symbol=" + symbol + ", openPrice=" + openPrice + ", currentTime="
+				+ currentTime + ", currentPrice=" + currentPrice + "]";
+	} 
+
+}

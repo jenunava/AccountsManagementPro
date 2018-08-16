@@ -1,0 +1,135 @@
+package org.CampaignData.consuming.CampaignData.entity;
+
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+/**
+ * This is the Campaign resource model
+ * @author jnavamshan
+ *
+ */
+//with @JsonIgnoreProperties from the Jackson JSON processing library to indicate that any properties not bound in this type should be ignored.
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Campaign {
+	
+	private String advertiser;
+	private String cpm;
+	private Date endDate;
+	private int id;
+	private String name;
+	private Date startDate;
+	private List<Creative> creatives;
+	
+	
+	/**
+	 * @return the advertiser
+	 */
+	public String getAdvertiser() {
+		return advertiser;
+	}
+	
+	/**
+	 * @param advertiser the advertiser to set
+	 */
+	public void setAdvertiser(String advertiser) {
+		this.advertiser = advertiser;
+	}
+	
+	/**
+	 * @return the cpm
+	 */
+	public String getCpm() {
+		return cpm;
+	}
+	
+	/**
+	 * @param cpm the cpm to set
+	 */
+	public void setCpm(String cpm) {
+		this.cpm = cpm;
+	}
+	
+	/**
+	 * @return the endDate
+	 */
+	public Date getEndDate() {
+		return endDate;
+	}
+	
+	/**
+	 * @param endDate the endDate to set
+	 */
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+	
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * @return the startDate
+	 */
+	public Date getStartDate() {
+		return startDate;
+	}
+	
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Campaign [advertiser=" + advertiser + ", cpm=" + cpm + ", endDate=" + endDate + ", id=" + id + ", name="
+				+ name + ", startDate=" + startDate + "]";
+	}
+
+	/**
+	 * @return the creatives
+	 */
+	public List<Creative> getCreatives() {
+		return creatives;
+	}
+
+	/**
+	 * @param creatives the creatives to set
+	 */
+	public void setCreatives(List<Creative> creatives) {
+		this.creatives = creatives;
+	} 
+	
+	 
+
+}

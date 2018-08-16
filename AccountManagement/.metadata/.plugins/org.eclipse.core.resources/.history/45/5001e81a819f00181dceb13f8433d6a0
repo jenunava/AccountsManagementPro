@@ -1,0 +1,36 @@
+package com.UserStock.service;
+
+ import java.util.Date;
+import java.util.List;
+
+import com.UserStock.model.Stock;
+import com.UserStock.model.User;
+import com.UserStock.model.UserStock;
+import com.UserStock.model.UserStocksOrders; 
+ 
+
+/**
+ * UserStocks Inventory Service interface
+ * @author jnavamshan
+ *
+ */
+public interface UserStocksInventoryService {
+	
+	void createNewUser(User user);	
+	void updateUser(User user); 
+	void deleteUser(User user);	
+	User findUser(int userId);
+	List<UserStocksOrders> findUsersPortfolio(User user);
+	
+	void createStock(Stock stock);
+	void updateStock(Stock stock); 
+	void deleteStock(Stock stock);	
+	Stock findStock(long id);
+	
+	void placeOrder(User user, Stock stock);
+	void cancelOrder(User user, Stock stock);
+
+	List<UserStocksOrders> findTransaction(Date startDate, Date endDate);
+	List<UserStocksOrders> findTransaction(User user);
+	UserStock findUserStock(User user);
+}

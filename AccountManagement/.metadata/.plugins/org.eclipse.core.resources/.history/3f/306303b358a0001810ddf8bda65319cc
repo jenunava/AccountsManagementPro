@@ -1,0 +1,48 @@
+package com.accounts.bl;
+ 
+import java.math.BigDecimal;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.UserStock.model.Stock;
+import com.UserStock.model.User;
+import com.UserStock.model.UserStocksOrders;
+import com.UserStock.model.UserStocksOrders.OrderNeed;
+import com.UserStock.service.UserStocksInventoryService; 
+
+/**
+ * 
+ * StocksManagement BL Test Client
+ * @author jnavamshan
+ *
+ */  
+public class UserStocksInventoryServiceTest extends Assert{ 
+
+	@Autowired
+	UserStocksInventoryService service;
+	
+	@Test
+    public void testStocks(){ 
+		Assert.assertEquals(3, service.findAllUser().size());
+		Assert.assertEquals(3, service.findAllStock().size()); 
+		User user = new User("Jasmin", "Kevin", "Phone1" ,"Address1");
+		service.createNewUser(user);
+		Assert.assertEquals(4, service.findAllUser().size());
+		user = service.findUser(1);
+		String oldAddress = user.getAddress();
+		user.setAddress("newAddress");
+		service.updateUser(user);
+		Assert.assertEquals(oldAddress, user.getAddress());
+		service.deleteUser(user);
+		Assert.assertEquals(3, service.findAllUser().size());
+		user = service.findUser(1);
+		Stock stock = service.findStock(1);
+		UserStocksOrders order = new UserStocksOrders();
+		order.placeOrder(user, stock, OrderNeed.BUY, 100, stock.getOpenPrice().subtract(new BigDecimal(2)));
+		service.placeOrder(user, order);
+		
+		
+    }
+}

@@ -1,0 +1,5 @@
+package org.CampaignData.consuming.CampaignData.entity;
+
+public class Campaign {
+
+}

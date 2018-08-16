@@ -1,0 +1,188 @@
+package com.accounts.rest;
+ 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;  
+import org.springframework.web.client.RestTemplate; 
+ 
+
+/**
+ * 
+ * StocksManagement Rest Test Client
+ * @author jnavamshan
+ *
+ */ 
+public class UserStocksInventoryServiceRestTestClient {
+ 
+    public static final String REST_SERVICE_URI = "http://localhost:8080/StocksManagement";
+     
+  
+    /* GET */
+    @SuppressWarnings("unchecked")
+    /**
+     * list all the user Stocks
+     */
+	private static void listAllUser() {
+		System.out.println("-----------Testing listAllUser API-----------");  
+
+		RestTemplate restTemplate = new RestTemplate(); 
+		HttpEntity<List> response = restTemplate.exchange(
+				REST_SERVICE_URI + "/users/", 
+				 HttpMethod.GET, 
+				getHttpHeaderEntity(), 
+		        List.class);
+		
+		List<LinkedHashMap> usersMap = response.getBody();
+
+		if (usersMap != null) {
+			for (LinkedHashMap user : usersMap) {
+				System.out.println(user);
+			}
+		} else {
+			System.out.println("-----------No accounts exist----------");
+		}
+	}
+ 
+    private static HttpEntity<?> getHttpHeaderEntity() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE); 
+
+		HttpEntity<?> entity = new HttpEntity<>(headers); 
+		return entity;
+	}
+    
+    /*
+	 GET 
+    *//**
+     * get the user account with account id "1"
+     *//*
+    private static void getUserStock(){
+        System.out.println("-----------Testing getUserStock API----------");
+        RestTemplate restTemplate = new RestTemplate(); 
+		HttpEntity<UserStock> response = restTemplate.exchange(
+				REST_SERVICE_URI+"/accounts/1", 
+				 HttpMethod.GET, 
+				getHttpHeaderEntity(), 
+				UserStock.class);
+		 
+        System.out.println(response);
+    }
+     
+     POST 
+    *//**
+     * create a user account
+     *//*
+    private static void createUserStock() {
+        System.out.println("-----------Testing create UserStock API----------");
+        HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.add("username", "JackSmith");
+		headers.add("password", "Massachusetts"); 
+        RestTemplate restTemplate = new RestTemplate(); 
+        UserStock account = new UserStock(7, "JenuUsername", "Apple34567", "Jenu", "Nava", "Ques7", "Ans7");
+        HttpEntity<UserStock> entity = new HttpEntity<UserStock>(account, headers);    
+
+		ResponseEntity<String> response = restTemplate.exchange(
+				REST_SERVICE_URI+"/accounts/",
+				HttpMethod.POST, entity, String.class);
+        System.out.println("Location : "+ response);
+    }
+    
+     POST 
+    *//**
+     * create bulk user accounts
+     *//*
+    private static void createBulkUserStock() {
+        System.out.println("-----------Testing create UserStock API----------");
+        HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.add("username", "JackSmith");
+		headers.add("password", "Massachusetts");
+        RestTemplate restTemplate = new RestTemplate();
+        List<UserStock> accounts  = new ArrayList<UserStock>();
+        accounts.add(new UserStock(8, "wwwwwwwww", "Apple34567", "wwww", "www", "Ques8", "Ans8"));
+        accounts.add(new UserStock(9, "yyyyyyyyy", "Apple34567", "yyyy", "yyyyyy", "Ques9", "Ans9"));
+        accounts.add(new UserStock(10, "zzzzzzzzzz", "Apple34567", "zzzzzz", "zzzzz", "Ques10", "Ans10"));
+        HttpEntity<List<UserStock>> entity = new HttpEntity<List<UserStock>>(accounts, headers);    
+        
+        ResponseEntity<String> response = restTemplate.exchange(
+				REST_SERVICE_URI+"/accounts/",
+				HttpMethod.POST, entity, String.class);
+        System.out.println("Location : "+ response);
+        
+    }
+ 
+     PUT 
+    *//**
+     * update an existing account
+     *//*
+    private static void updateUserStock() {
+		System.out.println("-----------Testing update UserStock API----------");
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.add("username", "JackSmith");
+		headers.add("password", "Massachusetts");
+		RestTemplate restTemplate = new RestTemplate();
+
+		UserStock account = new UserStock(11, "qqqqqqq", "Orange45678", "Rqeqqvah", "qqqqqq", "qqqqq", "Ans11");
+		HttpEntity<UserStock> entity = new HttpEntity<UserStock>(account, headers);
+
+		ResponseEntity<UserStock> response = restTemplate.exchange(REST_SERVICE_URI + "/accounts/4", HttpMethod.PUT,
+				entity, UserStock.class);
+		System.out.println(account);
+    }
+ 
+     DELETE 
+    *//**
+     * delete an account
+     *//*
+    private static void deleteUserStock() {
+        System.out.println("-----------Testing delete UserStock API----------");
+        RestTemplate restTemplate = new RestTemplate(); 
+ 
+     		HttpEntity<String> response = restTemplate.exchange(
+     				REST_SERVICE_URI+"/accounts/3", 
+     				 HttpMethod.DELETE, 
+     				getHttpHeaderEntity(), 
+     				String.class);  
+    }
+ 
+ 
+     DELETE 
+    *//**
+     * delete all the account
+     *//*
+    private static void deleteAllUserStocks() {
+        System.out.println("Testing all delete UserStocks API----------");
+        RestTemplate restTemplate = new RestTemplate();  
+     		HttpEntity<String> response = restTemplate.exchange(
+     				REST_SERVICE_URI+"/accounts/", 
+     				 HttpMethod.DELETE, 
+     				getHttpHeaderEntity(), 
+     				String.class);   
+    }*/
+ 
+    /***
+     * 
+     * @param args
+     */
+    public static void main(String args[]){
+        listAllUser();
+       // getUserStock();
+       // createUserStock();
+       // listAllUserStocks();
+        //createBulkUserStock();
+        //listAllUserStocks();        
+        //updateUserStock();
+       // listAllUserStocks();
+       // deleteUserStock();
+       // listAllUserStocks();
+        //deleteAllUserStocks(); 
+    }
+}

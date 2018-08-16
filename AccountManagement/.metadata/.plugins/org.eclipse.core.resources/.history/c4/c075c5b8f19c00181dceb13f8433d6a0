@@ -1,0 +1,39 @@
+package org.CampaignData.consuming.CampaignData;
+
+import org.CampaignData.consuming.CampaignData.entity.Campaign;
+import org.junit.Test;
+
+import junit.framework.Assert; 
+
+/**
+ * Unit test for  app.
+ */
+public class AppTest extends Assert {
+	
+	@Test
+	public void validateClicksAndImpresasions(){
+		App app = new App();
+		app.main(null);
+		Assert.assertNotNull(app.getCampaigns());
+		Assert.assertNotNull(app.getCreatives());
+		
+		Assert.assertTrue(!app.getCampaigns().isEmpty());
+		Assert.assertTrue(!app.getCreatives().isEmpty());	
+		
+		Assert.assertNotNull(app.getCampaigns().get(0));
+		final Campaign testCampaign1 = app.getCampaigns().get(0);
+		
+		int testCampaignClicks = app.getCreatives().stream().filter(creative -> creative.getParentId() == testCampaign1.getId()).mapToInt(creative -> creative.getClicks()).sum();
+		int testCampaignImpressions = app.getCreatives().stream().filter(creative -> creative.getParentId() == testCampaign1.getId()).mapToInt(creative -> creative.getImpressions()).sum();
+		Assert.assertEquals(testCampaignClicks, testCampaign1.getTotalClicks());
+		Assert.assertEquals(testCampaignImpressions, testCampaign1.getTotalImpressions());
+		
+		final Campaign  testCampaign2 = app.getCampaigns().get(app.getCampaigns().size()-1);
+		
+		testCampaignClicks = app.getCreatives().stream().filter(creative -> creative.getParentId() == testCampaign2.getId()).mapToInt(creative -> creative.getClicks()).sum();
+		testCampaignImpressions = app.getCreatives().stream().filter(creative -> creative.getParentId() == testCampaign2.getId()).mapToInt(creative -> creative.getImpressions()).sum();
+		Assert.assertEquals(testCampaignClicks, testCampaign2.getTotalClicks());
+		Assert.assertEquals(testCampaignImpressions, testCampaign2.getTotalImpressions());
+	}
+ 
+}

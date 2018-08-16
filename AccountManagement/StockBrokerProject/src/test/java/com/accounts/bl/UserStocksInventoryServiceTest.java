@@ -1,42 +1,72 @@
 package com.accounts.bl;
  
+import java.math.BigDecimal;
+
 import org.junit.Assert;
-import org.junit.Test; 
-import com.accounts.model.UserAccount;
-import com.accounts.service.UserAccountServiceImpl;
-import com.accounts.service.UserAccountsService;
- 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.userstock.model.Stock;
+import com.userstock.model.User;
+import com.userstock.model.UserStocksOrders;
+import com.userstock.model.UserStocksOrders.OrderNeed;
+import com.userstock.service.UserStocksInventoryService;
+import com.userstock.service.UserStocksInventoryServiceImpl; 
 
 /**
  * 
- * AccountsManagement BL Test Client
+ * Stocks Management BL Test Client
  * @author jnavamshan
  *
  */  
-public class AccountsManagementBLTestClient extends Assert{ 
-
+public class UserStocksInventoryServiceTest extends Assert{ 
+ 
+	@Autowired
+	UserStocksInventoryService service;
+	
 	@Test
-    public void testAccounts(){ 
-
-	    UserAccountsService userAccountsService = new UserAccountServiceImpl();
-		Assert.assertEquals(5, userAccountsService.findAllUserAccounts().size());
-		Assert.assertNotNull(userAccountsService.findByAccountId(2));
-		Assert.assertNull(userAccountsService.findByAccountId(200));
-		Assert.assertNull(userAccountsService.findByUsername("JenuNotadded"));
-		Assert.assertNotNull(userAccountsService.findByUsername("JasonBourne")); 
-		UserAccount account = new UserAccount(6, "JackSmith", "Massachusetts","Jack","Smith", "Ques1", "Ans1", false);
-		userAccountsService.saveUserAccount(account);
-		Assert.assertEquals(6, userAccountsService.findAllUserAccounts().size());
-		Assert.assertNotNull(userAccountsService.findByAccountId(6));
-		userAccountsService.deleteUserAccountById(4);
-		Assert.assertEquals(5, userAccountsService.findAllUserAccounts().size());
-		Assert.assertNull(userAccountsService.findByAccountId(4));
-		Assert.assertTrue(userAccountsService.isUserAccountExist(account));
-		UserAccount account2 = userAccountsService.findByAccountId(2);
-		userAccountsService.deleteUserAccountById(account2.getAccountId());
-		Assert.assertFalse(userAccountsService.isUserAccountExist(account2));
-		userAccountsService.deleteAllUserAccounts();
-		Assert.assertEquals(0, userAccountsService.findAllUserAccounts().size());
+    public void testStocks(){ 
+		Assert.assertEquals(3, service.findAllUser().size());
+		Assert.assertEquals(3, service.findAllStock().size()); 
+		User user = new User("Jasmin", "Kevin", "Phone1" ,"Address1");
+		service.createNewUser(user);
+		Assert.assertEquals(4, service.findAllUser().size());
+		user = service.findUser(1);
+		String oldAddress = user.getAddress();
+		user.setAddress("newAddress");
+		service.updateUser(user);
+		Assert.assertNotEquals(oldAddress, user.getAddress());
+		service.deleteUser(user);
+		Assert.assertEquals(3, service.findAllUser().size());
+		user = service.findUser(2);
+		
+		Stock stock = service.findStock(1);
+		UserStocksOrders order = new UserStocksOrders();
+		order.placeOrder(user, stock, OrderNeed.BUY, 100, stock.getOpenPrice().subtract(new BigDecimal(2)));
+		service.placeOrder(user, order);
+		order = new UserStocksOrders();
+		order.placeOrder(user, stock, OrderNeed.BUY, 200, stock.getOpenPrice().subtract(new BigDecimal(4)));
+		service.placeOrder(user, order);
+		order = new UserStocksOrders();
+		order.placeOrder(user, stock, OrderNeed.BUY, 50, stock.getOpenPrice().subtract(new BigDecimal(2)));
+		service.placeOrder(user, order);
+		order = new UserStocksOrders();
+		order.placeOrder(user, stock, OrderNeed.BUY, 130, stock.getOpenPrice().subtract(new BigDecimal(5)));
+		service.placeOrder(user, order);
+		Assert.assertEquals(4, service.findUserStock(user).getStockOrders().get(stock.getStockId()).size());
+		stock = service.findStock(2);
+		order = new UserStocksOrders();
+		order.placeOrder(user, stock, OrderNeed.SELL, 100, stock.getOpenPrice().subtract(new BigDecimal(2)));
+		service.placeOrder(user, order);
+		order = new UserStocksOrders();
+		order.placeOrder(user, stock, OrderNeed.BUY, 200, stock.getOpenPrice().subtract(new BigDecimal(4)));
+		service.placeOrder(user, order);
+		order = new UserStocksOrders();
+		order.placeOrder(user, stock, OrderNeed.SELL, 50, stock.getOpenPrice().subtract(new BigDecimal(2)));
+		service.placeOrder(user, order);
+		Assert.assertEquals(3, service.findUserStock(user).getStockOrders().get(stock.getStockId()).size());
+		
+		
 		
     }
 }

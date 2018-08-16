@@ -1,44 +1,37 @@
 package com.accounts.rest;
- 
-import java.net.URI;
-import java.util.ArrayList;
+  
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.accounts.model.UserAccount;
+import org.springframework.http.MediaType;  
+import org.springframework.web.client.RestTemplate; 
+ 
 
 /**
  * 
- * AccountsManagement Rest Test Client
+ * StocksManagement Rest Test Client
  * @author jnavamshan
  *
  */ 
-public class AccountsManagementRestTestClient {
+public class UserStocksInventoryServiceRestTestClient {
  
-    public static final String REST_SERVICE_URI = "http://localhost:8080/AccountsManagementProject";
+    public static final String REST_SERVICE_URI = "http://localhost:8080/StocksManagement";
      
   
     /* GET */
     @SuppressWarnings("unchecked")
     /**
-     * list all the user Accounts
+     * list all the user Stocks
      */
-	private static void listAllUserAccounts() {
-		System.out.println("-----------Testing listAllUserAccounts API-----------");  
+	private static void listAllUser() {
+		System.out.println("-----------Testing listAllUser API-----------");  
 
 		RestTemplate restTemplate = new RestTemplate(); 
 		HttpEntity<List> response = restTemplate.exchange(
-				REST_SERVICE_URI + "/accounts/", 
+				REST_SERVICE_URI + "/users/", 
 				 HttpMethod.GET, 
 				getHttpHeaderEntity(), 
 		        List.class);
@@ -46,53 +39,52 @@ public class AccountsManagementRestTestClient {
 		List<LinkedHashMap> usersMap = response.getBody();
 
 		if (usersMap != null) {
-			for (LinkedHashMap acc : usersMap) {
-				System.out.println(acc);
+			for (LinkedHashMap user : usersMap) {
+				System.out.println(user);
 			}
 		} else {
 			System.out.println("-----------No accounts exist----------");
 		}
 	}
-     
+ 
     private static HttpEntity<?> getHttpHeaderEntity() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.add("username", "JackSmith");
-		headers.add("password", "Massachusetts"); 
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE); 
 
 		HttpEntity<?> entity = new HttpEntity<>(headers); 
 		return entity;
 	}
-
-	/* GET */
-    /**
+    
+    /*
+	 GET 
+    *//**
      * get the user account with account id "1"
-     */
-    private static void getUserAccount(){
-        System.out.println("-----------Testing getUserAccount API----------");
+     *//*
+    private static void getUserStock(){
+        System.out.println("-----------Testing getUserStock API----------");
         RestTemplate restTemplate = new RestTemplate(); 
-		HttpEntity<UserAccount> response = restTemplate.exchange(
+		HttpEntity<UserStock> response = restTemplate.exchange(
 				REST_SERVICE_URI+"/accounts/1", 
 				 HttpMethod.GET, 
 				getHttpHeaderEntity(), 
-				UserAccount.class);
+				UserStock.class);
 		 
         System.out.println(response);
     }
      
-    /* POST */
-    /**
+     POST 
+    *//**
      * create a user account
-     */
-    private static void createUserAccount() {
-        System.out.println("-----------Testing create UserAccount API----------");
+     *//*
+    private static void createUserStock() {
+        System.out.println("-----------Testing create UserStock API----------");
         HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.add("username", "JackSmith");
 		headers.add("password", "Massachusetts"); 
         RestTemplate restTemplate = new RestTemplate(); 
-        UserAccount account = new UserAccount(7, "JenuUsername", "Apple34567", "Jenu", "Nava", "Ques7", "Ans7");
-        HttpEntity<UserAccount> entity = new HttpEntity<UserAccount>(account, headers);    
+        UserStock account = new UserStock(7, "JenuUsername", "Apple34567", "Jenu", "Nava", "Ques7", "Ans7");
+        HttpEntity<UserStock> entity = new HttpEntity<UserStock>(account, headers);    
 
 		ResponseEntity<String> response = restTemplate.exchange(
 				REST_SERVICE_URI+"/accounts/",
@@ -100,22 +92,22 @@ public class AccountsManagementRestTestClient {
         System.out.println("Location : "+ response);
     }
     
-    /* POST */
-    /**
+     POST 
+    *//**
      * create bulk user accounts
-     */
-    private static void createBulkUserAccount() {
-        System.out.println("-----------Testing create UserAccount API----------");
+     *//*
+    private static void createBulkUserStock() {
+        System.out.println("-----------Testing create UserStock API----------");
         HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.add("username", "JackSmith");
 		headers.add("password", "Massachusetts");
         RestTemplate restTemplate = new RestTemplate();
-        List<UserAccount> accounts  = new ArrayList<UserAccount>();
-        accounts.add(new UserAccount(8, "wwwwwwwww", "Apple34567", "wwww", "www", "Ques8", "Ans8"));
-        accounts.add(new UserAccount(9, "yyyyyyyyy", "Apple34567", "yyyy", "yyyyyy", "Ques9", "Ans9"));
-        accounts.add(new UserAccount(10, "zzzzzzzzzz", "Apple34567", "zzzzzz", "zzzzz", "Ques10", "Ans10"));
-        HttpEntity<List<UserAccount>> entity = new HttpEntity<List<UserAccount>>(accounts, headers);    
+        List<UserStock> accounts  = new ArrayList<UserStock>();
+        accounts.add(new UserStock(8, "wwwwwwwww", "Apple34567", "wwww", "www", "Ques8", "Ans8"));
+        accounts.add(new UserStock(9, "yyyyyyyyy", "Apple34567", "yyyy", "yyyyyy", "Ques9", "Ans9"));
+        accounts.add(new UserStock(10, "zzzzzzzzzz", "Apple34567", "zzzzzz", "zzzzz", "Ques10", "Ans10"));
+        HttpEntity<List<UserStock>> entity = new HttpEntity<List<UserStock>>(accounts, headers);    
         
         ResponseEntity<String> response = restTemplate.exchange(
 				REST_SERVICE_URI+"/accounts/",
@@ -124,32 +116,32 @@ public class AccountsManagementRestTestClient {
         
     }
  
-    /* PUT */
-    /**
+     PUT 
+    *//**
      * update an existing account
-     */
-    private static void updateUserAccount() {
-		System.out.println("-----------Testing update UserAccount API----------");
+     *//*
+    private static void updateUserStock() {
+		System.out.println("-----------Testing update UserStock API----------");
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.add("username", "JackSmith");
 		headers.add("password", "Massachusetts");
 		RestTemplate restTemplate = new RestTemplate();
 
-		UserAccount account = new UserAccount(11, "qqqqqqq", "Orange45678", "Rqeqqvah", "qqqqqq", "qqqqq", "Ans11");
-		HttpEntity<UserAccount> entity = new HttpEntity<UserAccount>(account, headers);
+		UserStock account = new UserStock(11, "qqqqqqq", "Orange45678", "Rqeqqvah", "qqqqqq", "qqqqq", "Ans11");
+		HttpEntity<UserStock> entity = new HttpEntity<UserStock>(account, headers);
 
-		ResponseEntity<UserAccount> response = restTemplate.exchange(REST_SERVICE_URI + "/accounts/4", HttpMethod.PUT,
-				entity, UserAccount.class);
+		ResponseEntity<UserStock> response = restTemplate.exchange(REST_SERVICE_URI + "/accounts/4", HttpMethod.PUT,
+				entity, UserStock.class);
 		System.out.println(account);
     }
  
-    /* DELETE */
-    /**
+     DELETE 
+    *//**
      * delete an account
-     */
-    private static void deleteUserAccount() {
-        System.out.println("-----------Testing delete UserAccount API----------");
+     *//*
+    private static void deleteUserStock() {
+        System.out.println("-----------Testing delete UserStock API----------");
         RestTemplate restTemplate = new RestTemplate(); 
  
      		HttpEntity<String> response = restTemplate.exchange(
@@ -160,35 +152,35 @@ public class AccountsManagementRestTestClient {
     }
  
  
-    /* DELETE */
-    /**
+     DELETE 
+    *//**
      * delete all the account
-     */
-    private static void deleteAllUserAccounts() {
-        System.out.println("Testing all delete UserAccounts API----------");
+     *//*
+    private static void deleteAllUserStocks() {
+        System.out.println("Testing all delete UserStocks API----------");
         RestTemplate restTemplate = new RestTemplate();  
      		HttpEntity<String> response = restTemplate.exchange(
      				REST_SERVICE_URI+"/accounts/", 
      				 HttpMethod.DELETE, 
      				getHttpHeaderEntity(), 
      				String.class);   
-    }
+    }*/
  
     /***
      * 
      * @param args
      */
     public static void main(String args[]){
-        listAllUserAccounts();
-        getUserAccount();
-        createUserAccount();
-        listAllUserAccounts();
-        //createBulkUserAccount();
-        listAllUserAccounts();        
-        updateUserAccount();
-        listAllUserAccounts();
-        deleteUserAccount();
-        listAllUserAccounts();
-        deleteAllUserAccounts(); 
+        listAllUser();
+       // getUserStock();
+       // createUserStock();
+       // listAllUserStocks();
+        //createBulkUserStock();
+        //listAllUserStocks();        
+        //updateUserStock();
+       // listAllUserStocks();
+       // deleteUserStock();
+       // listAllUserStocks();
+        //deleteAllUserStocks(); 
     }
 }

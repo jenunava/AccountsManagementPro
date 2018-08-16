@@ -1,5 +1,6 @@
-package com.accounts.configuration;
+package com.UserStock.service;
 
+ 
 import java.io.IOException;
 
 import javax.servlet.Filter;

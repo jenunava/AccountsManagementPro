@@ -1,0 +1,208 @@
+package com.UserStock.controller;
+ 
+import java.util.List;
+ 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod; 
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.UserStock.model.User;
+import com.UserStock.service.UserStocksInventoryService;
+import com.accounts.model.UserStock;
+import com.accounts.service.UserStocksService; 
+ 
+/**
+ * This is the UserStock controller class
+ * @author jnavamshan
+ *
+ */
+@RestController
+public class UserStocksInventoryController {
+ 
+    @Autowired
+    UserStocksInventoryService userStocksService; 
+ 
+    /**
+     * Retrieve all User
+     * @return all user
+     */     
+	@RequestMapping(value = "/users/", method = RequestMethod.GET)
+	public ResponseEntity<List<User>> listAllUser() {
+		List<User> users = userStocksService.findAllUser();
+		if (users.isEmpty()) {
+			return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+	}
+
+
+	/**
+     * Retrieve Single User
+     * @param id is the users id 
+     * @return Response - Single User
+     */
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> getUser(@PathVariable("id") int id) {
+		System.out.println("Fetching User wit id " + id);
+		User user = userStocksService.findUser(id); 
+		if (user == null) {
+			System.out.println("User with user id " + id + " not found");
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
+     
+     
+    /**
+     * Create a UserStock
+     * @param account is the account to be created
+     * @param ucBuilder is the URI Component builder
+     * @return  Response - void
+     */
+	@RequestMapping(value = "/accounts/", method = RequestMethod.POST)
+	public ResponseEntity<Void> createUserStock(@RequestBody UserStock account, UriComponentsBuilder ucBuilder,
+			@RequestHeader(value = "username") String username, @RequestHeader(value = "password") String password) {
+		System.out.println("Creating UserStock " + account.getUsername());
+
+		if (!validAccess(username, password, null)) {
+			return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+		}
+
+		if (userStocksService.isUserStockExist(account)) {
+			System.out.println("A UserStock with name " + account.getUsername() + " already exist");
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+		if(isEmpty(account.getUsername()) || isEmpty(account.getPassword()) || isEmpty(account.getFirstName()) || isEmpty(account.getLastName())){ 
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+
+		userStocksService.saveUserStock(account);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setLocation(ucBuilder.path("/accounts/{id}").buildAndExpand(account.getStockId()).toUri());
+		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+	}
+	
+	 /**
+     * Create bulk UserStock
+     * @param accounts is the account to be created
+     * @param ucBuilder is the URI Component builder
+     * @return  Response - void
+     */
+	@RequestMapping(value = "/accounts/bulkCreate/", method = RequestMethod.POST)
+	public ResponseEntity<Void> createBulkUserStocks(@RequestBody List<UserStock> accounts, UriComponentsBuilder ucBuilder,
+			@RequestHeader(value = "username") String username, @RequestHeader(value = "password") String password) { 
+		if (!validAccess(username, password, null)) {
+			return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+		}
+
+		for(UserStock acc : accounts){
+			if (userStocksService.isUserStockExist(acc)) {
+				System.out.println("A UserStock with name " + acc.getUsername() + " already exist");
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+			if(isEmpty(acc.getUsername()) || isEmpty(acc.getPassword()) || isEmpty(acc.getFirstName()) || isEmpty(acc.getLastName())){ 
+				return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		accounts.forEach(item -> userStocksService.saveUserStock(item)); 
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
+ 
+     
+    /**
+     * Update a UserStock
+     * @param id is the account id of the User account which to be updated
+     * @param account to be updated
+     * @return Response - UseStock
+     */
+    @RequestMapping(value = "/accounts/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<UserStock> updateUser(@PathVariable("id") long id, @RequestBody UserStock account,
+			@RequestHeader(value = "username") String username, @RequestHeader(value = "password") String password) {
+		System.out.println("Updating UserStock " + id);
+
+		UserStock currentUserStock = userStocksService.findByStockId(id);
+		if (!validAccess(username, password, currentUserStock)) {
+			return new ResponseEntity<UserStock>(HttpStatus.FORBIDDEN);
+		} 
+
+		if (currentUserStock == null) {
+			System.out.println("UserStock with id " + id + " not found");
+			return new ResponseEntity<UserStock>(HttpStatus.NOT_FOUND);
+		}
+
+		if (!currentUserStock.getUsername().equals(account.getUsername())) {
+			UserStock userStockWithSameUsername = userStocksService.findByUsername(account.getUsername());
+			if(userStockWithSameUsername != null){
+				System.out.println("UserStock with username  " + account.getUsername() + " already exits.");
+				return new ResponseEntity<UserStock>(HttpStatus.FORBIDDEN);
+			}
+		}
+
+		if(!isEmpty(account.getUsername())){currentUserStock.setUsername(account.getUsername());}
+		if(!isEmpty(account.getFirstName())){currentUserStock.setFirstName(account.getFirstName());}
+		if(!isEmpty(account.getLastName())){currentUserStock.setLastName(account.getLastName());}
+		if(!isEmpty(account.getSecurityQuestion())){currentUserStock.setSecurityQuestion(account.getSecurityQuestion());}
+		if(!isEmpty(account.getSecurityQuestionAnswer())){currentUserStock.setSecurityQuestionAnswer(account.getSecurityQuestionAnswer());}
+
+		userStocksService.updateUserStock(currentUserStock);
+		return new ResponseEntity<UserStock>(currentUserStock, HttpStatus.OK);
+	} 
+
+
+	private boolean isEmpty(String username) { 
+		return username == null ||  username.isEmpty();
+	}
+
+
+	/**
+     * Delete a UserStock
+     * @param id is the account id of the User account which to be deleted
+     * @return Response - UserStock
+     */
+	@RequestMapping(value = "/accounts/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<UserStock> deleteUser(@PathVariable("id") long id,
+			@RequestHeader(value = "username") String username, @RequestHeader(value = "password") String password) {
+		System.out.println("Fetching & Deleting UserStock with id " + id);
+
+		UserStock account = userStocksService.findByStockId(id);
+		if (!validAccess(username, password, account)) {
+			return new ResponseEntity<UserStock>(HttpStatus.FORBIDDEN);
+		}
+		if (account == null) {
+			System.out.println("Unable to delete. UserStock with id " + id + " not found");
+			return new ResponseEntity<UserStock>(HttpStatus.NOT_FOUND);
+		}
+
+		userStocksService.deleteUserStockById(id);
+		return new ResponseEntity<UserStock>(HttpStatus.NO_CONTENT);
+	}
+ 
+     
+    /**
+     * delete all the existing account 
+     * @return Response - UserStock
+     */
+	@RequestMapping(value = "/accounts/", method = RequestMethod.DELETE)
+	public ResponseEntity<UserStock> deleteAllUsers(@RequestHeader(value = "username") String username,
+			@RequestHeader(value = "password") String password) {
+		System.out.println("Deleting All UserStocks");
+		if (!validAccess(username, password, null)) {
+			return new ResponseEntity<UserStock>(HttpStatus.FORBIDDEN);
+		}
+
+		userStocksService.deleteAllUserStocks();
+		return new ResponseEntity<UserStock>(HttpStatus.NO_CONTENT);
+	}
+    
+}

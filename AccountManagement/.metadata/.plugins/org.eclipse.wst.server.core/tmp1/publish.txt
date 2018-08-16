@@ -1,3 +1,0 @@
-#Tomcat publish data
-#Thu May 24 21:21:21 PDT 2018
-org.eclipse.jst.jee.server\:AccountsManagementProject=C\:\\Apache\\apache-tomcat-8.0.24\\webapps\\AccountsManagementProject

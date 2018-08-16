@@ -1,0 +1,26 @@
+package com.accounts.bl;
+ 
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.UserStock.service.UserStocksInventoryService;
+import com.accounts.model.UserStock;
+import com.accounts.service.UserStockServiceImpl;
+import com.accounts.service.UserStocksService;
+ 
+
+/**
+ * 
+ * StocksManagement BL Test Client
+ * @author jnavamshan
+ *
+ */  
+public class UserStocksInventoryServiceTest extends Assert{ 
+
+	@Test
+    public void testStocks(){ 
+
+	    UserStocksInventoryService service = new UserStocksInventoryService(); 
+		
+    }
+}

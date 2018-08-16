@@ -1,0 +1,244 @@
+package com.UserStock.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.UserStock.model.Stock;
+import com.UserStock.model.User;
+import com.UserStock.model.UserStock;
+import com.UserStock.model.UserStocksOrders; 
+
+/**
+ * UserStocks Inventory Service Implementation class
+ * @author jnavamshan
+ *
+ */
+@Service("userStocksInventoryService")
+@Transactional
+public class UserStocksInventoryServiceImpl implements UserStocksInventoryService{
+	
+	private static HashMap<Integer,User> usersMap = new HashMap<Integer,User>();
+	private static HashMap<Integer,Stock> stocksMap = new HashMap<Integer,Stock>();
+	
+	static{
+		populateDummyUserStocks();
+	}
+	 
+	private static void populateDummyUserStocks(){ 	
+		User user = new User(1,"Jasmin", "Kevin", "Phone1" ,"Address1");
+		usersMap.put(user.getUserId(), user);
+		user = new User(2,"John", "Peter", "Phone2" ,"Address2");
+		usersMap.put(user.getUserId(), user);
+		user = new User(3,"Rose", "Mary", "Phone3" ,"Address3"); 
+		usersMap.put(user.getUserId(), user);
+		
+		Stock stock = new Stock(1, "CDX", new BigDecimal(10), new Date(), new BigDecimal(11));
+		stocksMap.put(stock.getStockId(), stock);
+		stock = new Stock(2, "MEL", new BigDecimal(15), new Date(), new BigDecimal(16));
+		stocksMap.put(stock.getStockId(), stock);
+		stock = new Stock(3, "USQ", new BigDecimal(12), new Date(), new BigDecimal(11));
+		stocksMap.put(stock.getStockId(), stock);
+	}
+
+	/*
+
+	*//**
+	 * return all the exiting user accounts
+	 * @return all the exiting user accounts
+	 *//*
+	public List<UserStock> findAllUserStocks() {
+		return accounts;
+	}
+	
+	*//**
+	 * return the User Stock which has the passed in account id
+	 * @return null if it is not found
+	 *//*
+	public UserStock findByStockId(long accountId) {
+		for(UserStock account : accounts){
+			if(account.getStockId() == accountId){
+				return account;
+			}
+		}
+		return null;
+	}
+	
+	*//**
+	 * return the User Stock which has the passed in account  name
+	 * @return null if it is not found
+	 *//*
+	public UserStock findByUsername(String username) {
+		for(UserStock account : accounts){
+			if(account.getUsername().equalsIgnoreCase(username)){
+				return account;
+			}
+		}
+		return null;
+	}
+	
+	*//**
+	 * save the passed in user account
+	 * @param account is the User Stock to be saved
+	 *//*
+	public void saveUserStock(UserStock account) {
+		account.setStockId(counter.incrementAndGet());
+		accounts.add(account);
+	}
+
+	*//**
+	 * update the passed User account
+	 * @param account is the User account to be updated
+	 *//*
+	public void updateUserStock(UserStock account) {
+		int index = accounts.indexOf(account);
+		accounts.set(index, account);
+	}
+
+	*//**
+	 *delete the account which has the passed in account Id
+	 *@param accountId is the accountId of the account to be deleted
+	 *//*
+	public void deleteUserStockById(long accountId) {		
+		for (Iterator<UserStock> iterator = accounts.iterator(); iterator.hasNext(); ) {
+		    UserStock account = iterator.next();
+		    if (account.getStockId() == accountId) {
+		        iterator.remove();
+		    }
+		}
+	}
+
+	*//**
+	 * return true if the  passed in account is exits, false otherwise
+	 * @return true if the  passed in account is exits, false otherwise
+	 *//*
+	public boolean isUserStockExist(UserStock account) {
+		return findByUsername(account.getUsername())!=null || findByStockId(account.getStockId())!=null;
+	}
+	
+	*//**
+	 * delete all the existing user account
+	 *//*
+	public void deleteAllUserStocks(){
+		for (Iterator<UserStock> iterator = accounts.iterator(); iterator.hasNext(); ) {
+		    UserStock account = iterator.next();
+		    if (!account.isAdmin()) {
+		        iterator.remove();
+		    }
+		}
+	}
+*/
+
+
+	@Override
+	public void createNewUser(User user) {
+		user.setUserId(usersMap.values().size()+1);
+		usersMap.put(user.getUserId(), user);		
+	}
+
+
+	@Override
+	public void updateUser(User user) {
+		if(user.getUserId() > 0){
+			usersMap.put(user.getUserId(), user);	
+		}
+		
+	}
+
+	@Override
+	public void deleteUser(User user) {
+		usersMap.remove(user.getUserId());	
+		
+	} 
+
+	@Override
+	public User findUser(int userId) {
+		return usersMap.get(userId);
+	}
+
+
+	@Override
+	public List<UsersStocksOrders> findUsersPortfolio(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void createStock(Stock stock) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void updateStock(Stock stock) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void deleteStock(int stockId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void deleteStock(Stock stock) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Stock findStock(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void placeOrder(User user, Stock stock) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void cancelOrder(User user, Stock stock) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public List<UsersStocksOrders> findTransaction(Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<UserStocksOrders> findTransaction(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public UserStock findUserStock(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+}

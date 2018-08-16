@@ -1,0 +1,30 @@
+package com.accounts.service;
+
+import java.util.List;
+
+import com.accounts.model.UserStock;
+
+/**
+ * UserStocks Service interface
+ * @author jnavamshan
+ *
+ */
+public interface UserStocksService {
+	
+	UserStock findByStockId(long id);
+	
+	UserStock findByUsername(String name);
+	
+	void saveUserStock(UserStock account);
+	
+	void updateUserStock(UserStock account);
+	
+	void deleteUserStockById(long id);
+
+	List<UserStock> findAllUserStocks(); 
+	
+	void deleteAllUserStocks();
+	
+	public boolean isUserStockExist(UserStock account);
+	
+}

@@ -1,0 +1,5 @@
+package com.UserStock.model;
+
+public class UsersStocks {
+
+}

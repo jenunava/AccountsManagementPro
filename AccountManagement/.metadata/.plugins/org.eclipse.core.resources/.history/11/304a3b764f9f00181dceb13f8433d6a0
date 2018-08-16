@@ -1,0 +1,15 @@
+package com.UserStock.model;
+
+public class UsersStocks {
+	
+	OrderStatus = {"NEW", "COMPLETED", "CANCELLED"};
+	
+	private int id;
+	private int userAccountId;
+	private int stockId;
+	private int quantityOfStock;
+	private boolean buy;
+	private BigDecimal threshHold;
+	private boolean 
+
+}

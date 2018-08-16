@@ -1,0 +1,106 @@
+package org.CampaignData.consuming.CampaignData.entity;
+
+/**
+ * This is the Creative resource model
+ * @author jnavamshan
+ *
+ */
+public class Creative {
+	
+	
+	private int clicks;
+	private int conversions;
+	private int id;
+	private int impressions;
+	private String name;
+	private int parentId;
+	private int views;
+	/**
+	 * @return the clicks
+	 */
+	public int getClicks() {
+		return clicks;
+	}
+	/**
+	 * @param clicks the clicks to set
+	 */
+	public void setClicks(int clicks) {
+		this.clicks = clicks;
+	}
+	/**
+	 * @return the conversions
+	 */
+	public int getConversions() {
+		return conversions;
+	}
+	/**
+	 * @param conversions the conversions to set
+	 */
+	public void setConversions(int conversions) {
+		this.conversions = conversions;
+	}
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	/**
+	 * @return the impressions
+	 */
+	public int getImpressions() {
+		return impressions;
+	}
+	/**
+	 * @param impressions the impressions to set
+	 */
+	public void setImpressions(int impressions) {
+		this.impressions = impressions;
+	}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * @return the parentId
+	 */
+	public int getParentId() {
+		return parentId;
+	}
+	/**
+	 * @param parentId the parentId to set
+	 */
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
+	}
+	/**
+	 * @return the views
+	 */
+	public int getViews() {
+		return views;
+	}
+	/**
+	 * @param views the views to set
+	 */
+	public void setViews(int views) {
+		this.views = views;
+	}
+	
+	
+	
+
+}

@@ -1,0 +1,21 @@
+package com.UserStock.model;
+
+import java.math.BigDecimal;
+
+public class UsersStocksOrders{
+	
+	enum OrderStatus {NEW, COMPLETED, CANCELLED;}
+	enum OrderNeed {BUY,  SELL;}
+	
+	private int id;
+	private int userAccountId;
+	private int stockId;
+	private int quantityOfStock;
+	private OrderStatus status;
+	private BigDecimal threshHold;
+	private OrderNeed orderNeed;
+	
+	
+	
+
+}

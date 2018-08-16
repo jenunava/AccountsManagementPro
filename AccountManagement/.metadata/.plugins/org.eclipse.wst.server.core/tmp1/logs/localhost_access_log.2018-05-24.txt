@@ -1,0 +1,4 @@
+127.0.0.1 - - [24/May/2018:21:33:28 -0700] "GET / HTTP/1.1" 404 994
+0:0:0:0:0:0:0:1 - - [24/May/2018:21:33:37 -0700] "GET /AccountsManagementProject/accounts/4 HTTP/1.1" 404 1066
+0:0:0:0:0:0:0:1 - - [24/May/2018:21:33:38 -0700] "GET /AccountsManagementProject/accounts/4 HTTP/1.1" 404 1066
+0:0:0:0:0:0:0:1 - - [24/May/2018:21:33:39 -0700] "GET /AccountsManagementProject/accounts/4 HTTP/1.1" 404 1066

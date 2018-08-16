@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.accounts</groupId>
-  <artifactId>AccountsManagement</artifactId>
+  <artifactId>StocksManagement</artifactId>
   <packaging>war</packaging>
   <version>1.0.0</version>
-  <name>AccountsManagement Maven Webapp</name>
+  <name>StocksManagement Maven Webapp</name>
 
   	<properties>
 		<springframework.version>4.2.0.RELEASE</springframework.version>
@@ -14,7 +14,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework</groupId>
+			<groupId>org.springframework</groupId>                                                                    
+			
+			
+			
+			
 			<artifactId>spring-webmvc</artifactId>
 			<version>${springframework.version}</version>
 		</dependency>
@@ -66,7 +70,7 @@
 					<version>2.4</version>
 					<configuration>
 						<warSourceDirectory>src/main/webapp</warSourceDirectory>
-						<warName>AccountsManagement</warName>
+						<warName>StocksManagement</warName>
 						<failOnMissingWebXml>false</failOnMissingWebXml>
 					</configuration>
 				</plugin> 
@@ -74,6 +78,6 @@
 			</plugins>
 		</pluginManagement>
 
-		<finalName>AccountsManagement</finalName>
+		<finalName>StocksManagement</finalName>
 	</build>
 </project>

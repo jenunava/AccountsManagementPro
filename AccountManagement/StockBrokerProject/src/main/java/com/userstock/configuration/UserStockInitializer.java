@@ -1,20 +1,22 @@
-package com.accounts.configuration;
+package com.userstock.configuration;
 
 import javax.servlet.Filter;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import com.userstock.service.CORSFilter;
+
 /**
- * User Account Initializer
+ * User Stock Initializer
  * 
  * @author jnavamshan
  *
  */
-public class UserAccountInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class UserStockInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { UserAccountConfiguration.class };
+		return new Class[] { UserStockonfiguration.class };
 	}
 
 	@Override

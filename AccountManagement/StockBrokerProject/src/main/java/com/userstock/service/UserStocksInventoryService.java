@@ -1,30 +1,35 @@
-package com.accounts.service;
+package com.userstock.service;
 
+ import java.util.Date;
 import java.util.List;
 
-import com.accounts.model.UserAccount;
+import com.userstock.model.Stock;
+import com.userstock.model.User;
+import com.userstock.model.UserStock;
+import com.userstock.model.UserStocksOrders; 
+ 
 
 /**
- * UserAccounts Service interface
+ * UserStocks Inventory Service interface
  * @author jnavamshan
  *
  */
-public interface UserAccountsService {
+public interface UserStocksInventoryService {
 	
-	UserAccount findByAccountId(long id);
+	void createNewUser(User user);	
+	void updateUser(User user); 
+	void deleteUser(User user);	
+	User findUser(int userId); 
 	
-	UserAccount findByUsername(String name);
+	void createStock(Stock stock);
+	void updateStock(Stock stock);  	
+	Stock findStock(int id);
 	
-	void saveUserAccount(UserAccount account);
-	
-	void updateUserAccount(UserAccount account);
-	
-	void deleteUserAccountById(long id);
+	void placeOrder(User user, UserStocksOrders order); 
 
-	List<UserAccount> findAllUserAccounts(); 
-	
-	void deleteAllUserAccounts();
-	
-	public boolean isUserAccountExist(UserAccount account);
-	
+	List<UserStocksOrders> findTransaction(Date startDate, Date endDate);
+	List<UserStocksOrders> findTransaction(User user);
+	UserStock findUserStock(User user);
+	List<User> findAllUser();
+	List<Stock> findAllStock();
 }

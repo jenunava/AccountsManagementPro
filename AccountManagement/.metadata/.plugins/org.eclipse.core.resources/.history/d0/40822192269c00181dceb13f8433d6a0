@@ -1,0 +1,31 @@
+package org.CampaignData.consuming.CampaignData;
+
+import java.util.List;
+
+import org.CampaignData.consuming.CampaignData.entity.Campaign;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
+	private static final Logger log = LoggerFactory.getLogger(App.class);
+
+    public static void main(String args[]) {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<Campaign>> campaigns =
+                restTemplate.exchange("http://homework.ad-juster.com/api/campaigns",
+                            HttpMethod.GET, null, new ParameterizedTypeReference<List<Campaign>>() {
+                    });
+        
+        //List<Campaign> campaigns = (List<Campaign>) restTemplate.getForObject("http://homework.ad-juster.com/api/campaigns ", Campaign.class);
+        //campaigns.forEach(campaign ->  log.info(campaign.toString())); 
+    }
+}

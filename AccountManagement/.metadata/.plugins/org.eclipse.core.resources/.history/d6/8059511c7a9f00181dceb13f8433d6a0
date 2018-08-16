@@ -1,0 +1,74 @@
+package com.UserStock.model;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserStocks {	
+	
+	private User user;
+	private List<Stock> stocks;
+	private BigDecimal totalAsset;
+	private List<UserStocksOrders> orders;
+	
+	
+	
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}
+	/**
+	 * @return the stocks
+	 */
+	public List<Stock> getStocks() {
+		if(stocks == null){
+			return new ArrayList<Stock>();
+		}
+		return stocks;
+	}
+	/**
+	 * @param stocks the stocks to set
+	 */
+	public void setStocks(List<Stock> stocks) {
+		this.stocks = stocks;
+	}
+	/**
+	 * @return the totalAsset
+	 */
+	public BigDecimal getTotalAsset() {
+		return totalAsset;
+	}
+	/**
+	 * @param totalAsset the totalAsset to set
+	 */
+	public void setTotalAsset(BigDecimal totalAsset) {
+		if(stocks != null){
+			totalAsset = stocks.forEach(stock -> stock.ge);
+		}
+		this.totalAsset = totalAsset;
+	}
+	/**
+	 * @return the orders
+	 */
+	public List<UserStocksOrders> getOrders() {
+		return orders;
+	}
+	/**
+	 * @param orders the orders to set
+	 */
+	public void setOrders(List<UserStocksOrders> orders) {
+		this.orders = orders;
+	}
+	
+	
+	
+
+}

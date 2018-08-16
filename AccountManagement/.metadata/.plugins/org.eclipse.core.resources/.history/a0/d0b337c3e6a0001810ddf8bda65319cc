@@ -1,0 +1,140 @@
+package com.UserStock.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.UserStock.model.Stock;
+import com.UserStock.model.User;
+import com.UserStock.model.UserStock;
+import com.UserStock.model.UserStocksOrders; 
+
+/**
+ * UserStocks Inventory Service Implementation class
+ * @author jnavamshan
+ *
+ */
+@Service("userStocksInventoryService")
+@Transactional
+public class UserStocksInventoryServiceImpl implements UserStocksInventoryService{
+	
+	private static HashMap<Integer,User> usersMap = new HashMap<Integer,User>();
+	private static HashMap<Integer,Stock> stocksMap = new HashMap<Integer,Stock>();
+	private static HashMap<Integer,UserStock> userStocks = new HashMap<Integer,UserStock>();
+	
+	static{
+		populateDummyUserStocks();
+	}
+	 
+	private static void populateDummyUserStocks(){ 	
+		User user = new User(1,"Jasmin", "Kevin", "Phone1" ,"Address1");
+		usersMap.put(user.getUserId(), user);
+		user = new User(2,"John", "Peter", "Phone2" ,"Address2");
+		usersMap.put(user.getUserId(), user);
+		user = new User(3,"Rose", "Mary", "Phone3" ,"Address3"); 
+		usersMap.put(user.getUserId(), user);
+		
+		Stock stock = new Stock(1, "CDX", new BigDecimal(10), new Date(), new BigDecimal(11));
+		stocksMap.put(stock.getStockId(), stock);
+		stock = new Stock(2, "MEL", new BigDecimal(15), new Date(), new BigDecimal(16));
+		stocksMap.put(stock.getStockId(), stock);
+		stock = new Stock(3, "USQ", new BigDecimal(12), new Date(), new BigDecimal(11));
+		stocksMap.put(stock.getStockId(), stock);
+	} 
+
+
+	@Override
+	public void createNewUser(User user) {
+		user.setUserId(usersMap.values().size()+1);
+		usersMap.put(user.getUserId(), user);		
+	}
+
+	@Override
+	public void updateUser(User user) {
+		if(user.getUserId() > 0){
+			usersMap.put(user.getUserId(), user);	
+		}		
+	}
+
+	@Override
+	public void deleteUser(User user) {
+		usersMap.remove(user.getUserId());			
+	} 
+
+	@Override
+	public User findUser(int userId) {
+		return usersMap.get(userId);
+	}
+
+	@Override
+	public void createStock(Stock stock) {
+		stock.setStockId(stocksMap.values().size()+1);
+		stocksMap.put(stock.getStockId(), stock);		
+	}
+
+	@Override
+	public void updateStock(Stock stock) {
+		if(stock.getStockId() > 0){
+			stocksMap.put(stock.getStockId(), stock);	
+		}		
+	}  
+
+	@Override
+	public Stock findStock(int id) { 
+		return stocksMap.get(id);
+	}
+
+	@Override
+	public void placeOrder(User user, UserStocksOrders order) {
+		userStocks.get(user.getUserId()).getOrders().add(order);		
+	} 
+	
+	@Override
+	public List<UserStocksOrders> findTransaction(Date startDate, Date endDate) {
+		List<UserStocksOrders> orders = new ArrayList<>();
+		for (UserStock userStock : userStocks.values()) {
+			orders.addAll(userStock.getOrders().stream().filter(
+					order -> (order.getOrderedDate().before(endDate) && order.getOrderedDate().after(startDate)))
+					.collect(Collectors.toList()));
+		}
+		return orders;
+	}
+
+
+	@Override
+	public List<UserStocksOrders> findTransaction(User user) { 
+		return findUserStock(user).getOrders();
+	}
+
+
+	@Override
+	public UserStock findUserStock(User user) { 
+		return userStocks.get(user.getUserId());
+	}
+
+
+	@Override
+	public List<User> findAllUser() {
+		List<User> users = new ArrayList<>();
+		usersMap.values().forEach(value -> users.add(value));;
+		return users;
+	}
+
+
+	@Override
+	public List<Stock> findAllStock() {
+		List<Stock> stocks = new ArrayList<>();
+		stocksMap.values().forEach(value -> stocks.add(value));;
+		return stocks; 
+	}
+
+
+}

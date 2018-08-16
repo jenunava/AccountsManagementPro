@@ -1,0 +1,79 @@
+package org.CampaignData.consuming.CampaignData;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.CampaignData.consuming.CampaignData.entity.Campaign;
+import org.CampaignData.consuming.CampaignData.entity.Creative;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * This is the main Application class
+ * @author jnavamshan
+ *
+ */
+public class App {
+	private static final Logger log = LoggerFactory.getLogger(App.class);
+	
+	private static List<Campaign> campaigns;
+	private static List<Creative> creatives;
+	 
+
+	public static void main(String args[]) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<List<Campaign>> response1 = restTemplate.exchange("http://homework.ad-juster.com/api/campaigns",
+				HttpMethod.GET, null, new ParameterizedTypeReference<List<Campaign>>(){});
+		campaigns = response1.getBody();
+		
+		ResponseEntity<List<Creative>> response2 = restTemplate.exchange("http://homework.ad-juster.com/api/creatives ",
+				HttpMethod.GET, null, new ParameterizedTypeReference<List<Creative>>(){});
+		creatives = response2.getBody();
+		
+		loadCreativeInCampaigns(campaigns, creatives);
+		System.out.println("************************************************************************************************************************************");
+		System.out.println("*                                 Total Campaigns received : [ " + campaigns.size() + " ]                                                   *");
+		System.out.println("************************************************************************************************************************************");
+		campaigns.forEach(campaign -> System.out.println(campaign));
+		//I assume the machine processing the data has enough memory to handle the number of records all at once 
+
+	}
+
+    /**
+     * I assumed there are no duplicate 'creative' records for a 'Campaign' [I could have selected set if there are duplicates]
+     * load the list creatives associated with a Campaign
+     * @param campaigns is the list of all Campaigns
+     * @param creatives is the list of creatives to be loaded in Campaign
+     */
+	private static void loadCreativeInCampaigns(List<Campaign> campaigns, List<Creative> creatives) {
+		//BASE CASE
+		if(campaigns == null || creatives == null){
+			return;
+		}
+		HashMap<Integer, List<Creative>> campaignCreativesMap = new HashMap<Integer, List<Creative>>();
+		campaigns.forEach(campaign -> campaignCreativesMap.put(campaign.getId(), new ArrayList<Creative>()));
+		creatives.forEach(creative -> campaignCreativesMap.get(creative.getParentId()).add(creative));
+		campaigns.forEach(campaign -> campaign.setCreatives(campaignCreativesMap.get(campaign.getId())));		
+	}
+
+	/**
+	 * @return the campaigns
+	 */
+	public static List<Campaign> getCampaigns() {
+		return campaigns;
+	}
+
+	/**
+	 * @return the creatives
+	 */
+	public static List<Creative> getCreatives() {
+		return creatives;
+	}
+	
+	
+}

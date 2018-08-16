@@ -1,0 +1,197 @@
+package com.UserStock.model;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.UserStock.service.UserStocksInventoryServiceImpl;
+
+public class UserStocksOrders{
+	
+	@Autowired
+	UserStocksInventoryServiceImpl userStocksInventoryService;
+	
+	public enum OrderStatus {NEW, COMPLETED, CANCELLED;}
+	public enum OrderNeed {BUY,  SELL;}
+	
+	private int id;
+	private User user;
+	private Stock stock;
+	private int userId;
+	private int stockId;
+	private int quantityOfStock = 0;  
+	private OrderStatus status;
+	private BigDecimal threshHold = new BigDecimal(0);
+	private BigDecimal transactionPrice;
+	private OrderNeed orderNeed;
+	private Date orderedDate;
+	private Date updateDate;	
+	
+	
+	 
+	public UserStocksOrders(int userId, int stockId, int quantityOfStock, BigDecimal threshHold, OrderNeed orderNeed) {
+		super();
+		this.userId = userId;
+		this.stockId = stockId;
+		this.quantityOfStock = quantityOfStock;
+		this.threshHold = threshHold;
+		this.orderNeed = orderNeed;
+	}
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	} 
+	/**
+	 * @return the quantityOfStock
+	 */
+	public int getQuantityOfStock() {
+		return quantityOfStock;
+	}
+	/**
+	 * @param quantityOfStock the quantityOfStock to set
+	 */
+	public void setQuantityOfStock(int quantityOfStock) {
+		this.quantityOfStock = quantityOfStock;
+	}
+	/**
+	 * @return the status
+	 */
+	public OrderStatus getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(OrderStatus status) {
+		this.status = status;
+	}
+	/**
+	 * @return the threshHold
+	 */
+	public BigDecimal getThreshHold() {
+		return threshHold;
+	}
+	/**
+	 * @param threshHold the threshHold to set
+	 */
+	public void setThreshHold(BigDecimal threshHold) {
+		this.threshHold = threshHold;
+	}
+
+	/**
+	 * @return the transactionPrice
+	 */
+	public BigDecimal getTransactionPrice() {
+		return transactionPrice;
+	}
+	/**
+	 * @param transactionPrice the transactionPrice to set
+	 */
+	public void setTransactionPrice(BigDecimal transactionPrice) {
+		this.transactionPrice = transactionPrice;
+	}
+
+	/**
+	 * @return the orderNeed
+	 */
+	public OrderNeed getOrderNeed() {
+		return orderNeed;
+	}
+	/**
+	 * @param orderNeed the orderNeed to set
+	 */
+	public void setOrderNeed(OrderNeed orderNeed) {
+		this.orderNeed = orderNeed;
+	}
+	/**
+	 * @return the orderedDate
+	 */
+	public Date getOrderedDate() {
+		return orderedDate;
+	}
+	/**
+	 * @param orderedDate the orderedDate to set
+	 */
+	public void setOrderedDate(Date orderedDate) {
+		this.orderedDate = orderedDate;
+	}
+	/**
+	 * @return the updateDate
+	 */
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+	/**
+	 * @param updateDate the updateDate to set
+	 */
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+	 
+	public void cancelOrder(){
+		status = OrderStatus.CANCELLED;
+		this.updateDate = new Date();
+	}
+	
+	
+	public void placeOrder(User user, Stock stock, OrderNeed need, int quantity, BigDecimal threshhold){
+		this.user =  user;
+		this.stock = stock;
+		this.quantityOfStock = quantity;
+		this.orderNeed = need;
+		this.threshHold = threshhold;
+		this.orderedDate = new Date();
+		this.updateDate = new Date(); 
+		this.status = OrderStatus.NEW;
+		
+	} 
+	
+	public void execute(){
+		if(status == OrderStatus.NEW){
+			if(threshHold.compareTo(stock.getCurrentPrice()) >= 0 && orderNeed == OrderNeed.BUY){ 
+				compeleteOrder();
+			}else if(threshHold.compareTo(stock.getCurrentPrice()) < 0 && orderNeed == OrderNeed.SELL){
+				compeleteOrder(); 
+			}
+		}
+	}
+	private void compeleteOrder(){
+		this.transactionPrice = stock.getCurrentPrice();
+		this.status = OrderStatus.COMPLETED;
+		this.updateDate = new Date();  
+	}
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}
+	/**
+	 * @return the stock
+	 */
+	public Stock getStock() {
+		return stock;
+	}
+	/**
+	 * @param stock the stock to set
+	 */
+	public void setStock(Stock stock) {
+		this.stock = stock;
+	}
+
+}

@@ -1,0 +1,29 @@
+package org.CampaignData.consuming.CampaignData;
+
+import org.CampaignData.consuming.CampaignData.entity.Campaign;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+/**
+ * Unit test for  App.
+ */
+public class AppTest extends TestCase {
+	
+	public void validateClicksAndImpresasions(){
+		Assert.assertNotNull(App.getCampaigns());
+		Assert.assertNotNull(App.getCreatives());
+		
+		Assert.assertTrue(!App.getCampaigns().isEmpty());
+		Assert.assertTrue(!App.getCreatives().isEmpty());	
+		
+		Assert.assertNotNull(App.getCampaigns().get(0));
+		Campaign testCampaign = App.getCampaigns().get(0);
+		
+		int testCampaignClicks = App.getCreatives().stream().filter(creative -> creative.getParentId() == testCampaign.getId()).mapToInt(creative -> creative.getClicks()).sum();
+		int testCampaignImpressions = App.getCreatives().stream().filter(creative -> creative.getParentId() == testCampaign.getId()).mapToInt(creative -> creative.getImpressions()).sum();
+		Assert.assertEquals(testCampaignClicks, testCampaign.getTotalClicks());
+		Assert.assertEquals(testCampaignImpressions, testCampaign.getTotalImpressions());
+	}
+ 
+}
